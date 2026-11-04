@@ -1,0 +1,3 @@
+@echo off
+echo Starting Ngrok tunnel for ABDM Backend on port 8000...
+ngrok http 8000

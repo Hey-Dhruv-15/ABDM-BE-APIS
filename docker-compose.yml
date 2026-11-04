@@ -1,0 +1,89 @@
+services:
+
+  abdm:
+    build: .
+    image: chiranthvkashyap/abdm_be:${IMAGE_TAG}
+
+    container_name: abdm-backend
+
+    restart: unless-stopped
+
+    depends_on:
+      redis:
+        condition: service_healthy
+
+    ports:
+      - "8005:8000"
+
+    env_file:
+      - .env
+
+    environment:
+      APP_ENV: production
+      LOG_LEVEL: INFO
+      ORCHESTRATION_REDIS_URL: redis://redis:6379/0
+
+    volumes:
+      - ./app:/app/app
+      - ./app/config/integrations:/app/app/config/integrations
+      - ./logs:/app/logs
+      - ./consent_requests.json:/app/consent_requests.json
+      - ./link_tokens.json:/app/link_tokens.json
+      - ./care_contexts.json:/app/care_contexts.json
+      - ./health_records.json:/app/health_records.json
+      - ./transactions.json:/app/transactions.json
+      - ./daily_tokens.json:/app/daily_tokens.json
+
+    networks:
+      - abdm-network
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+
+  redis:
+    image: redis:7-alpine
+
+    container_name: abdm-redis
+
+    restart: unless-stopped
+
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+
+    volumes:
+      - redis-data:/data
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "ping"
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+    networks:
+      - abdm-network
+
+networks:
+  abdm-network:
+    driver: bridge
+
+
+volumes:
+  redis-data:

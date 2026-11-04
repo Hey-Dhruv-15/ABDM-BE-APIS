@@ -1,0 +1,16 @@
+{
+  "abc@abdm:TMH-PUID-001": {
+    "abhaAddress": "abc@abdm",
+    "referenceNumber": "TMH-PUID-001",
+    "hiType": "PRESCRIPTION",
+    "display": "display 1",
+    "patientDisplay": "Display"
+  },
+  "abc@abdm:CC1": {
+    "abhaAddress": "abc@abdm",
+    "referenceNumber": "REF1",
+    "hiType": "PRESCRIPTION",
+    "display": "Prescription",
+    "patientDisplay": "Visit 1"
+  }
+}

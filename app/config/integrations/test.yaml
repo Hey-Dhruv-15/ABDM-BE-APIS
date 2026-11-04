@@ -1,0 +1,10 @@
+- name: test-relay
+  description: Test integration for end-to-end validation.
+  parser: fhir
+  transformer: fhir
+  producer: http
+  auth:
+    type: none
+  target_config:
+    endpoint: "http://127.0.0.1:8000/api/v1/test/receiver"
+    timeout: 5.0

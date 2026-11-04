@@ -1,0 +1,14 @@
+.env
+.venv/
+.venv313/
+venv/
+.tmp/
+.pytest_cache/
+pytest-cache-files-*/
+__pycache__/
+*.py[cod]
+.vscode/
+frontend/node_modules/
+frontend/dist/
+frontend/vite-dev.log
+frontend/vite-dev.err

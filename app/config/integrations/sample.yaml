@@ -1,0 +1,49 @@
+# Sample Integration: FHIR over HTTP with API Key
+- name: internal-fhir-relay
+  description: Receives FHIR JSON, transforms internally, and forwards to target endpoint.
+  
+  # Pipeline configuration
+  parser: fhir
+  transformer: fhir
+  producer: http
+  
+  # Security configuration
+  auth:
+    type: api_key
+    config:
+      header_name: X-Relay-API-Key
+      valid_keys: ["relay-secret-9912"]
+  
+  # Reliable Delivery & Retries
+  retries:
+    max_retries: 5
+    backoff_factor: 2.5
+    max_delay: 60.0
+    retry_on_status: [429, 500, 503]
+  
+  # Target (passed to producer)
+  target_config:
+    endpoint: "https://hospital-api-production.local/fhir/v1/Patient"
+    timeout: 30.0
+    headers:
+      Content-Type: "application/fhir+json"
+
+# Sample Integration: HL7 to HL7 Forwarding (No Auth)
+- name: mllp-passthrough
+  description: Receives HL7 v2, performs basic normalization, and forwards via MLLP TCP.
+  
+  parser: hl7
+  transformer: hl7
+  producer: mllp
+  
+  auth:
+    type: none
+  
+  retries:
+    max_retries: 3
+    backoff_factor: 2.0
+  
+  target_config:
+    host: "10.0.1.50"
+    port: 2575
+    timeout: 10.0
